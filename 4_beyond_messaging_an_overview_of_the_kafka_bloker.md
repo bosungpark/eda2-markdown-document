@@ -21,3 +21,32 @@ Scaling is thus a pretty simple affair: add new machines and rebalance. Consumpt
 The main advantage of this from an architectural perspective is that it takes the issue of scalabilty off the table.
 
 Scalabilty opens other opportunities too. Single clusters can grow to company scales, without the risk of workloads overpowering the infrastructure.
+
+Segregating Load in Multiservice Ecosystem
+=
+Service architectures are by definition multitenant. A single cluster will be used by many different services. a single cluster can be shared by many number of services, causing degradation or instability.
+
+Kafka includes a thoughput control feature, called quotas.
+
+Maintaining Strong Ordering Guarantees
+=
+There is a couple of things that need to be sonsidered to ensure strong ordering guarantees, The first is that messages that required relative ordering need to be sent to the same partition.
+Something key-based ordering isn't enough, and global ordering is required. To maintain global ordering, use a single partition topic.
+
+The second thing to be aware of is retries. there is no potential for a reordering of events when failure occur and batches are retried. This is simply something we configured.
+
+Ensuring Messages Are Durable
+=
+Kafka provides durabilty through replication. This means messages are not be lost, if not every machine fails.
+
+
+Load-Balance Services and Make Them Highly Available
+=
+Event-driven services should always be run in a highly available. The main reason for this is it's essentially a no-op
+
+if one of the services fail, Kafka will detect this failure and reroute message from the failed service to the one that remains. If the failed service comes back online, load flips back again.
+
+This process actually works by assigning whole partition to different consumers. A strength of this approach is that a single partition can only ever be assigned to a single service instance(consumer). This is invariant, implying that ordering is guaranteed, even as service fail and restart.
+
+So services inherit both high availablity and load balancing, meaning they can scale out, handle unplanned outages, perform rolling restarts without service downtime. In-fact Kafka releases are always backward-compatible with previous version.
+
