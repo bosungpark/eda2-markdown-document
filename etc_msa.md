@@ -94,3 +94,25 @@ HTTP 방식은 별도의 스레드를 통해, 주 흐름과의 직접적인 결�
 1. 병목 지점 확인을 위해서 부하 테스트load tests 수행
 2. 컨데이터container 사용으로 하드웨어 효율을 높임
 3. 시스템 복구 및 취약점 식별을 위해 서비스 모의 장애 수행
+
+You Cannot Have Exactly-Once Delivery...breaking new geek
+=
+Within the context of a distributed system, you cannot have exactly-once message delivery.
+You cannot have exactly-once delivery semantics in any of situations.
+
+distributed systems are all about trade-offs. 
+There are essentially three types of delivery semantics: at-most-once, at-least-once, and exactly-once.
+
+So where does the trade-off come into play, and why is exactly-once delivery impossible? The answer lies in the Byzantine Generals Problem. sending 10 letters doesn’t really provide any additional guarantees. 
+
+State changes are idempotent and applying the same state change multiple times does not lead to inconsistencies as long as the application order is consistent with the delivery order. Consequently, guaranteeing at-least once semantics is sufficient and simplifies the implementation.
+
+Every major message queue in existence which provides any guarantees will market itself as at-least-once delivery. If it claims exactly-once, it’s because they are lying to your face in hopes that you will buy it or they themselves do not understand distributed systems. 
+
+When using confirms, producers recovering from a channel or connection failure should retransmit any messages for which an acknowledgement has not been received from the broker. There is a possibility of message duplication here, because the broker might have sent a confirmation that never reached the producer (due to network failures, etc). Therefore consumer applications will need to perform deduplication or handle incoming messages in an idempotent manner.
+
+The way we achieve exactly-once delivery in practice is by faking it. Either the messages themselves should be idempotent, meaning they can be applied more than once without adverse effects, or we remove the need for idempotency through deduplication.
+
+To reiterate, there is no such thing as exactly-once delivery. We must choose between the lesser of two evils, which is at-least-once delivery in most cases. 
+
+ This can be used to simulate exactly-once semantics by ensuring idempotency or otherwise eliminating side effects from operations.
