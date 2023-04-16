@@ -116,3 +116,30 @@ The way we achieve exactly-once delivery in practice is by faking it. Either the
 To reiterate, there is no such thing as exactly-once delivery. We must choose between the lesser of two evils, which is at-least-once delivery in most cases. 
 
  This can be used to simulate exactly-once semantics by ensuring idempotency or otherwise eliminating side effects from operations.
+
+
+What are Apache Kafka Queues?...HEVO
+=
+In the Apache Kafka Queueing system, messages are saved in a queue fashion. This allows messages in the queue to be ingested by one or more consumers, but one consumer can only consume each message at a time. As soon as a consumer reads a message, it gets removed from the Apache Kafka Queue.
+
+This is in stark contrast to the publish-subscribe system, where messages are persisted in a topic. 
+
+One key advantage is that the Apache Kafka Queue helps in segregating the work so that each consumer receives a unique set of data to process. As a result, there is no overlap, allowing the burden to be divided and horizontally scalable.
+
+if the number of consumers exceeds the number of the predefined partitions.
+
+queueing is better suited to imperative programming, where messages are similar for consumers in the same domain, versus event-driven programming, where a single event might result in different actions from the consumers’ end, which vary from domain to domain. 
+
+However, as mentioned above, its shortcoming is that it is not a multi-subscriber; once the consumer reads the data, it is gone.
+
+SNS, SQS에서 exactly once를 달성할 방법이 있는지?...aws
+=
+Unlike standard queues, FIFO queues don't introduce duplicate messages. FIFO queues help you avoid sending duplicates to a queue. If you retry the SendMessage action within the 5-minute deduplication interval, Amazon SQS doesn't introduce any duplicates into the queue.
+
+**MessageDeduplicationId**
+This parameter applies only to FIFO (first-in-first-out) queues.
+
+The token used for deduplication of sent messages. If a message with a particular MessageDeduplicationId is sent successfully, any messages sent with the same MessageDeduplicationId are accepted successfully but aren't delivered during the 5-minute deduplication interval.
+
+**ContentBasedDeduplication**
+If you aren't able to provide a MessageDeduplicationId and you enable ContentBasedDeduplication for your queue, Amazon SQS uses a SHA-256 hash to generate the MessageDeduplicationId using the body of the message (but not the attributes of the message).
