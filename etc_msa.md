@@ -130,7 +130,7 @@ if the number of consumers exceeds the number of the predefined partitions.
 
 queueing is better suited to imperative programming, where messages are similar for consumers in the same domain, versus event-driven programming, where a single event might result in different actions from the consumers’ end, which vary from domain to domain. 
 
-However, as mentioned above, its shortcoming is that it is not a multi-subscriber; once the consumer reads the data, it is gone.
+as mentioned above, its shortcoming is that it is not a multi-subscriber; once the consumer reads the data, it is gone.
 
 -> 맥락 상, 이벤트 드리븐에서는 까다롭다는 것을 이야기 하는 것인지 궁금합니다..!
 
