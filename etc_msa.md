@@ -132,6 +132,8 @@ queueing is better suited to imperative programming, where messages are similar 
 
 However, as mentioned above, its shortcoming is that it is not a multi-subscriber; once the consumer reads the data, it is gone.
 
+-> 맥락 상, 이벤트 드리븐에서는 까다롭다는 것을 이야기 하는 것인지 궁금합니다..!
+
 SNS, SQS에서 exactly once를 달성할 방법이 있는지?...aws
 =
 Unlike standard queues, FIFO queues don't introduce duplicate messages. FIFO queues help you avoid sending duplicates to a queue. If you retry the SendMessage action within the 5-minute deduplication interval, Amazon SQS doesn't introduce any duplicates into the queue.
